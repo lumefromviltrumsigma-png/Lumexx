@@ -1,5 +1,5 @@
 --==================================================
--- LUME X - INK GAME EDITION (REFINED + FIXED)
+-- LUME X - INK GAME EDITION (REFINED)
 --==================================================
 
 local Players = game:GetService("Players")
@@ -40,29 +40,35 @@ local PromptDurations = {}
 -- COLORS
 --==================================================
 local C = {
-    BG = Color3.fromRGB(8,8,10),
-    PANEL = Color3.fromRGB(14,14,17),
-    PANEL2 = Color3.fromRGB(20,20,24),
-    PANEL3 = Color3.fromRGB(28,28,34),
-    BORDER = Color3.fromRGB(38,38,44),
-    BORDER_LIGHT = Color3.fromRGB(58,58,66),
-    TEXT = Color3.fromRGB(240,240,245),
-    TEXT_DIM = Color3.fromRGB(170,170,178),
-    MUTED = Color3.fromRGB(100,100,110),
-    ACTIVE = Color3.fromRGB(240,240,245),
-    KNOB_ON = Color3.fromRGB(12,12,14),
-    KNOB_OFF = Color3.fromRGB(140,140,148),
-    SWITCH_OFF = Color3.fromRGB(40,40,46),
-    SUCCESS = Color3.fromRGB(120,220,140),
-    WARN = Color3.fromRGB(240,200,110),
-    DANGER = Color3.fromRGB(240,110,110),
+    BG = Color3.fromRGB(6,6,8),
+    PANEL = Color3.fromRGB(13,13,16),
+    PANEL2 = Color3.fromRGB(18,18,22),
+    PANEL3 = Color3.fromRGB(24,24,29),
+    PANEL4 = Color3.fromRGB(31,31,38),
+    BORDER = Color3.fromRGB(32,32,38),
+    BORDER_LIGHT = Color3.fromRGB(56,56,64),
+    TEXT = Color3.fromRGB(238,238,242),
+    TEXT_DIM = Color3.fromRGB(160,160,168),
+    MUTED = Color3.fromRGB(92,92,100),
+    ACCENT = Color3.fromRGB(245,245,250),
+    ACTIVE_BG = Color3.fromRGB(250,250,252),
+    ACTIVE_FG = Color3.fromRGB(10,10,12),
+    SWITCH_OFF = Color3.fromRGB(38,38,44),
+    KNOB_OFF = Color3.fromRGB(150,150,158),
+    KNOB_ON = Color3.fromRGB(14,14,16),
+    SUCCESS = Color3.fromRGB(110,215,135),
+    WARN = Color3.fromRGB(235,195,105),
+    DANGER = Color3.fromRGB(235,105,105),
+    SHADOW = Color3.fromRGB(0,0,0),
 }
 
 local Anim = {
-    Fast = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-    Normal = TweenInfo.new(0.22, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    Micro = TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    Fast = TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    Normal = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
     Smooth = TweenInfo.new(0.32, Enum.EasingStyle.Quart, Enum.EasingDirection.Out),
-    Bounce = TweenInfo.new(0.28, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    Slide = TweenInfo.new(0.28, Enum.EasingStyle.Cubic, Enum.EasingDirection.Out),
+    Bounce = TweenInfo.new(0.32, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
 }
 
 --==================================================
@@ -93,55 +99,80 @@ notifyGui.DisplayOrder = 999999
 notifyGui.Parent = LP:WaitForChild("PlayerGui")
 
 local notifyHolder = Instance.new("Frame")
-notifyHolder.Size = UDim2.new(0, 270, 0, 0)
-notifyHolder.Position = UDim2.new(1, -286, 0, 60)
+notifyHolder.Size = UDim2.new(0, 280, 0, 0)
+notifyHolder.Position = UDim2.new(1, -300, 0, 22)
 notifyHolder.BackgroundTransparency = 1
 notifyHolder.Parent = notifyGui
 
 local notifyLayout = Instance.new("UIListLayout")
-notifyLayout.Padding = UDim.new(0, 8)
+notifyLayout.Padding = UDim.new(0, 10)
 notifyLayout.SortOrder = Enum.SortOrder.LayoutOrder
 notifyLayout.Parent = notifyHolder
 
 local function fn5(title, content)
     if not content then content = title; title = "LUME X" end
     local box = Instance.new("Frame")
-    box.Size = UDim2.new(1, 0, 0, 52)
-    box.BackgroundColor3 = C.PANEL
+    box.Size = UDim2.new(1, 0, 0, 58)
+    box.BackgroundColor3 = C.PANEL2
     box.BorderSizePixel = 0
     box.BackgroundTransparency = 1
     box.Position = UDim2.new(1, 40, 0, 0)
     box.Parent = notifyHolder
-    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 8)
-    local stroke = Instance.new("UIStroke", box); stroke.Color = C.BORDER; stroke.Transparency = 1
-    local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 3, 1, -12); bar.Position = UDim2.fromOffset(6, 6)
-    bar.BackgroundColor3 = C.ACTIVE; bar.BorderSizePixel = 0; bar.Parent = box
-    Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
+    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 10)
+
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "Shadow"
+    shadow.BackgroundTransparency = 1
+    shadow.Image = "rbxassetid://5028857084"
+    shadow.ImageColor3 = C.SHADOW
+    shadow.ImageTransparency = 0.55
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(24, 24, 276, 276)
+    shadow.Size = UDim2.new(1, 16, 1, 16)
+    shadow.Position = UDim2.new(0, -8, 0, -8)
+    shadow.ZIndex = 0
+    shadow.Parent = box
+
+    local stroke = Instance.new("UIStroke", box); stroke.Color = C.BORDER_LIGHT; stroke.Transparency = 1
+
+    local accent = Instance.new("Frame")
+    accent.Size = UDim2.new(0, 3, 1, -16); accent.Position = UDim2.fromOffset(8, 8)
+    accent.BackgroundColor3 = C.ACCENT; accent.BorderSizePixel = 0; accent.Parent = box
+    Instance.new("UICorner", accent).CornerRadius = UDim.new(1, 0)
+
+    local dot = Instance.new("Frame")
+    dot.Size = UDim2.fromOffset(6,6); dot.Position = UDim2.fromOffset(20, 20)
+    dot.BackgroundColor3 = C.ACCENT; dot.BorderSizePixel = 0; dot.Parent = box
+    Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+
     local t = Instance.new("TextLabel")
-    t.BackgroundTransparency = 1; t.Position = UDim2.fromOffset(16, 6); t.Size = UDim2.new(1, -26, 0, 16)
+    t.BackgroundTransparency = 1; t.Position = UDim2.fromOffset(34, 10); t.Size = UDim2.new(1, -44, 0, 16)
     t.Text = tostring(title); t.TextColor3 = C.TEXT; t.Font = Enum.Font.GothamBold; t.TextSize = 10
     t.TextXAlignment = Enum.TextXAlignment.Left; t.TextTransparency = 1; t.Parent = box
+
     local c = Instance.new("TextLabel")
-    c.BackgroundTransparency = 1; c.Position = UDim2.fromOffset(16, 24); c.Size = UDim2.new(1, -26, 0, 22)
+    c.BackgroundTransparency = 1; c.Position = UDim2.fromOffset(34, 28); c.Size = UDim2.new(1, -44, 0, 22)
     c.Text = tostring(content); c.TextColor3 = C.TEXT_DIM; c.Font = Enum.Font.GothamMedium; c.TextSize = 9
     c.TextWrapped = true; c.TextXAlignment = Enum.TextXAlignment.Left; c.TextTransparency = 1; c.Parent = box
+
     pcall(function()
         local s = Instance.new("Sound")
-        s.SoundId = "rbxassetid://4590657391"; s.Volume = 1.5
+        s.SoundId = "rbxassetid://4590657391"; s.Volume = 1.4
         s.Parent = SoundService; s:Play(); Debris:AddItem(s, 3)
     end)
-    TweenService:Create(box, Anim.Normal, {BackgroundTransparency = 0, Position = UDim2.new(0, 0, 0, 0)}):Play()
-    TweenService:Create(stroke, Anim.Normal, {Transparency = 0}):Play()
-    TweenService:Create(t, Anim.Normal, {TextTransparency = 0}):Play()
-    TweenService:Create(c, Anim.Normal, {TextTransparency = 0}):Play()
+
+    TweenService:Create(box, Anim.Slide, {BackgroundTransparency = 0, Position = UDim2.new(0, 0, 0, 0)}):Play()
+    TweenService:Create(stroke, Anim.Slide, {Transparency = 0}):Play()
+    TweenService:Create(t, Anim.Slide, {TextTransparency = 0}):Play()
+    TweenService:Create(c, Anim.Slide, {TextTransparency = 0}):Play()
+
     task.delay(4, function()
         if box and box.Parent then
-            TweenService:Create(box, Anim.Normal, {BackgroundTransparency = 1, Position = UDim2.new(1, 40, 0, 0)}):Play()
-            TweenService:Create(stroke, Anim.Normal, {Transparency = 1}):Play()
-            TweenService:Create(t, Anim.Normal, {TextTransparency = 1}):Play()
-            TweenService:Create(c, Anim.Normal, {TextTransparency = 1}):Play()
-            task.wait(0.3); box:Destroy()
+            TweenService:Create(box, Anim.Slide, {BackgroundTransparency = 1, Position = UDim2.new(1, 40, 0, 0)}):Play()
+            TweenService:Create(stroke, Anim.Slide, {Transparency = 1}):Play()
+            TweenService:Create(t, Anim.Slide, {TextTransparency = 1}):Play()
+            TweenService:Create(c, Anim.Slide, {TextTransparency = 1}):Play()
+            task.wait(0.32); box:Destroy()
         end
     end)
 end
@@ -291,7 +322,7 @@ local function refreshPlayers()
 end
 
 --==================================================
--- GUARD / GLASS ESP (world)
+-- GUARD ESP
 --==================================================
 local function checkAndAddGuard(model)
     if not Config.GuardESP or not model:IsA("Model") then return end
@@ -670,73 +701,138 @@ GUI.IgnoreGuiInset = true; GUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 GUI.Parent = LP:WaitForChild("PlayerGui")
 
 local vpSize = CAM.ViewportSize
-local targetW = IS_MOBILE and math.min(vpSize.X - 24, 400) or 420
-local targetH = IS_MOBILE and math.min(vpSize.Y - 80, 520) or 360
-if IS_MOBILE and vpSize.X > vpSize.Y then
-    targetH = math.min(vpSize.Y - 40, 380)
+local isLandscape = vpSize.X > vpSize.Y
+local targetW, targetH
+if IS_MOBILE then
+    if isLandscape then
+        targetW = math.clamp(vpSize.X * 0.55, 380, 560)
+        targetH = math.clamp(vpSize.Y * 0.85, 300, 480)
+    else
+        targetW = math.clamp(vpSize.X * 0.94, 300, 440)
+        targetH = math.clamp(vpSize.Y * 0.72, 360, 640)
+    end
+else
+    targetW = 440
+    targetH = 380
 end
 
 local Main = Instance.new("Frame")
 Main.Size = UDim2.fromOffset(targetW, targetH)
 Main.Position = UDim2.fromScale(0.5, 0.5)
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
-Main.BackgroundColor3 = C.BG; Main.BorderSizePixel = 0; Main.Active = true; Main.Parent = GUI
-Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
+Main.BackgroundColor3 = C.BG; Main.BorderSizePixel = 0; Main.Active = true; Main.ClipsDescendants = false; Main.Parent = GUI
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 14)
 local mS = Instance.new("UIStroke", Main); mS.Color = C.BORDER; mS.Thickness = 1
 
+-- Background depth gradient
+local bgGrad = Instance.new("UIGradient")
+bgGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(18,18,22)),
+    ColorSequenceKeypoint.new(1, C.BG),
+})
+bgGrad.Rotation = 90
+bgGrad.Parent = Main
+
+-- Drop shadow
+local dropShadow = Instance.new("ImageLabel")
+dropShadow.BackgroundTransparency = 1
+dropShadow.Image = "rbxassetid://5028857084"
+dropShadow.ImageColor3 = C.SHADOW
+dropShadow.ImageTransparency = 0.55
+dropShadow.ScaleType = Enum.ScaleType.Slice
+dropShadow.SliceCenter = Rect.new(24, 24, 276, 276)
+dropShadow.Size = UDim2.new(1, 24, 1, 24)
+dropShadow.Position = UDim2.new(0, -12, 0, -12)
+dropShadow.ZIndex = 0
+dropShadow.Parent = Main
+
 local mainScale = Instance.new("UIScale", Main)
-mainScale.Scale = 0.92
+mainScale.Scale = 0.94
 TweenService:Create(mainScale, Anim.Smooth, {Scale = 1}):Play()
 
--- Header
+--==================================================
+-- HEADER
+--==================================================
 local Header = Instance.new("Frame")
-Header.Size = UDim2.new(1,0,0,42); Header.BackgroundColor3 = C.PANEL
+Header.Size = UDim2.new(1,0,0,52); Header.BackgroundColor3 = C.PANEL
 Header.BorderSizePixel = 0; Header.Active = true; Header.Parent = Main
-Instance.new("UICorner", Header).CornerRadius = UDim.new(0,12)
+Instance.new("UICorner", Header).CornerRadius = UDim.new(0,14)
 
-local HeaderCover = Instance.new("Frame")
-HeaderCover.Size = UDim2.new(1,0,0,12); HeaderCover.Position = UDim2.new(0,0,1,-12)
-HeaderCover.BackgroundColor3 = C.PANEL; HeaderCover.BorderSizePixel = 0; HeaderCover.Parent = Header
+local headerCover = Instance.new("Frame")
+headerCover.Size = UDim2.new(1,0,0,14); headerCover.Position = UDim2.new(0,0,1,-14)
+headerCover.BackgroundColor3 = C.PANEL; headerCover.BorderSizePixel = 0; headerCover.Parent = Header
 
-local LogoDot = Instance.new("Frame")
-LogoDot.Size = UDim2.fromOffset(8,8); LogoDot.Position = UDim2.fromOffset(14,17)
-LogoDot.BackgroundColor3 = C.ACTIVE; LogoDot.BorderSizePixel = 0; LogoDot.Parent = Header
-Instance.new("UICorner", LogoDot).CornerRadius = UDim.new(1,0)
+local headerGrad = Instance.new("UIGradient")
+headerGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(22,22,27)),
+    ColorSequenceKeypoint.new(1, C.PANEL),
+})
+headerGrad.Rotation = 90
+headerGrad.Parent = Header
+
+local logoDot = Instance.new("Frame")
+logoDot.Size = UDim2.fromOffset(9,9); logoDot.Position = UDim2.fromOffset(18,22)
+logoDot.BackgroundColor3 = C.ACCENT; logoDot.BorderSizePixel = 0; logoDot.Parent = Header
+Instance.new("UICorner", logoDot).CornerRadius = UDim.new(1,0)
+
+local logoRing = Instance.new("Frame")
+logoRing.Size = UDim2.fromOffset(17,17); logoRing.Position = UDim2.fromOffset(14,18)
+logoRing.BackgroundTransparency = 1; logoRing.BorderSizePixel = 0; logoRing.Parent = Header
+local logoRingC = Instance.new("UICorner", logoRing); logoRingC.CornerRadius = UDim.new(1,0)
+local logoRingStroke = Instance.new("UIStroke", logoRing)
+logoRingStroke.Color = C.ACCENT; logoRingStroke.Thickness = 1; logoRingStroke.Transparency = 0.55
 
 local Title = Instance.new("TextLabel")
-Title.BackgroundTransparency = 1; Title.Position = UDim2.fromOffset(28,6)
+Title.BackgroundTransparency = 1; Title.Position = UDim2.fromOffset(40,8)
 Title.Size = UDim2.fromOffset(200,18); Title.Text = "LUME X"
-Title.TextColor3 = C.TEXT; Title.Font = Enum.Font.GothamBold; Title.TextSize = 14
+Title.TextColor3 = C.TEXT; Title.Font = Enum.Font.GothamBold; Title.TextSize = 15
 Title.TextXAlignment = Enum.TextXAlignment.Left; Title.Parent = Header
 
 local Sub = Instance.new("TextLabel")
-Sub.BackgroundTransparency = 1; Sub.Position = UDim2.fromOffset(28,22)
+Sub.BackgroundTransparency = 1; Sub.Position = UDim2.fromOffset(40,26)
 Sub.Size = UDim2.fromOffset(220,12); Sub.Text = "INK GAME EDITION"
 Sub.TextColor3 = C.MUTED; Sub.Font = Enum.Font.GothamMedium; Sub.TextSize = 8
 Sub.TextXAlignment = Enum.TextXAlignment.Left; Sub.Parent = Header
 
 local Close = Instance.new("TextButton")
-Close.Size = UDim2.fromOffset(28,28); Close.Position = UDim2.new(1,-36,0,7)
-Close.BackgroundColor3 = C.PANEL2; Close.BorderSizePixel = 0; Close.Text = "×"
-Close.TextColor3 = C.TEXT; Close.Font = Enum.Font.GothamBold; Close.TextSize = 18
+Close.Size = UDim2.fromOffset(30,30); Close.Position = UDim2.new(1,-42,0,11)
+Close.BackgroundColor3 = C.PANEL2; Close.BorderSizePixel = 0; Close.Text = ""
 Close.AutoButtonColor = false; Close.Parent = Header
 Instance.new("UICorner", Close).CornerRadius = UDim.new(0,8)
 local closeStroke = Instance.new("UIStroke", Close); closeStroke.Color = C.BORDER
 
+local closeBar1 = Instance.new("Frame")
+closeBar1.Size = UDim2.fromOffset(10,1.6); closeBar1.Position = UDim2.new(0.5,-5,0.5,-0.8)
+closeBar1.BackgroundColor3 = C.TEXT_DIM; closeBar1.BorderSizePixel = 0; closeBar1.Rotation = 45; closeBar1.Parent = Close
+local closeBar2 = Instance.new("Frame")
+closeBar2.Size = UDim2.fromOffset(10,1.6); closeBar2.Position = UDim2.new(0.5,-5,0.5,-0.8)
+closeBar2.BackgroundColor3 = C.TEXT_DIM; closeBar2.BorderSizePixel = 0; closeBar2.Rotation = -45; closeBar2.Parent = Close
+
 Close.MouseEnter:Connect(function()
     TweenService:Create(Close, Anim.Fast, {BackgroundColor3 = C.PANEL3}):Play()
     TweenService:Create(closeStroke, Anim.Fast, {Color = C.BORDER_LIGHT}):Play()
+    TweenService:Create(closeBar1, Anim.Fast, {BackgroundColor3 = C.TEXT}):Play()
+    TweenService:Create(closeBar2, Anim.Fast, {BackgroundColor3 = C.TEXT}):Play()
+    TweenService:Create(closeBar1, Anim.Fast, {Rotation = 135}):Play()
+    TweenService:Create(closeBar2, Anim.Fast, {Rotation = 45}):Play()
 end)
 Close.MouseLeave:Connect(function()
     TweenService:Create(Close, Anim.Fast, {BackgroundColor3 = C.PANEL2}):Play()
     TweenService:Create(closeStroke, Anim.Fast, {Color = C.BORDER}):Play()
+    TweenService:Create(closeBar1, Anim.Fast, {BackgroundColor3 = C.TEXT_DIM}):Play()
+    TweenService:Create(closeBar2, Anim.Fast, {BackgroundColor3 = C.TEXT_DIM}):Play()
+    TweenService:Create(closeBar1, Anim.Fast, {Rotation = 45}):Play()
+    TweenService:Create(closeBar2, Anim.Fast, {Rotation = -45}):Play()
 end)
 
--- Tab bar
+--==================================================
+-- TAB BAR
+--==================================================
 local TabBar = Instance.new("Frame")
-TabBar.Position = UDim2.fromOffset(10,50); TabBar.Size = UDim2.new(1,-20,0,34)
+TabBar.Position = UDim2.fromOffset(12,62); TabBar.Size = UDim2.new(1,-24,0,38)
 TabBar.BackgroundColor3 = C.PANEL; TabBar.BorderSizePixel = 0; TabBar.Parent = Main
-Instance.new("UICorner", TabBar).CornerRadius = UDim.new(0,8)
+Instance.new("UICorner", TabBar).CornerRadius = UDim.new(0,10)
+local tabBarStroke = Instance.new("UIStroke", TabBar); tabBarStroke.Color = C.BORDER; tabBarStroke.Transparency = 0.4
 
 local TabScroll = Instance.new("ScrollingFrame")
 TabScroll.Size = UDim2.fromScale(1,1); TabScroll.BackgroundTransparency = 1
@@ -747,59 +843,87 @@ TabScroll.ScrollingDirection = Enum.ScrollingDirection.X
 TabScroll.Parent = TabBar
 local TabLayout = Instance.new("UIListLayout", TabScroll)
 TabLayout.FillDirection = Enum.FillDirection.Horizontal
-TabLayout.Padding = UDim.new(0,4)
+TabLayout.Padding = UDim.new(0,3)
 TabLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 TabLayout.Parent = TabScroll
 local TLPad = Instance.new("UIPadding", TabScroll)
 TLPad.PaddingLeft = UDim.new(0,5); TLPad.PaddingRight = UDim.new(0,5); TLPad.Parent = TabScroll
 
 local Content = Instance.new("Frame")
-Content.Position = UDim2.fromOffset(10,90); Content.Size = UDim2.new(1,-20,1,-100)
+Content.Position = UDim2.fromOffset(12,110); Content.Size = UDim2.new(1,-24,1,-122)
 Content.BackgroundTransparency = 1; Content.Parent = Main
 
 --==================================================
--- TAB SYSTEM (SwitchPage BEFORE CreateTab)
+-- TAB SYSTEM
 --==================================================
 local Pages, Tabs = {}, {}
 local currentPageName = nil
+local tabIndicator = nil
 
 local function CreatePage(name)
     local page = Instance.new("ScrollingFrame")
     page.Size = UDim2.fromScale(1,1); page.BackgroundTransparency = 1
-    page.BorderSizePixel = 0; page.ScrollBarThickness = 3
+    page.BorderSizePixel = 0; page.ScrollBarThickness = 2
     page.ScrollBarImageColor3 = C.BORDER_LIGHT
+    page.ScrollBarImageTransparency = 0.6
     page.AutomaticCanvasSize = Enum.AutomaticSize.Y
     page.CanvasSize = UDim2.new(0,0,0,0); page.Visible = false; page.Parent = Content
     page.ScrollingDirection = Enum.ScrollingDirection.Y
+    page.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
     local pad = Instance.new("UIPadding", page)
-    pad.PaddingRight = UDim.new(0,4); pad.PaddingBottom = UDim.new(0,8); pad.PaddingTop = UDim.new(0,2)
+    pad.PaddingRight = UDim.new(0,4); pad.PaddingBottom = UDim.new(0,10); pad.PaddingTop = UDim.new(0,4)
     pad.Parent = page
     local lay = Instance.new("UIListLayout", page)
-    lay.Padding = UDim.new(0,6); lay.SortOrder = Enum.SortOrder.LayoutOrder; lay.Parent = page
+    lay.Padding = UDim.new(0,7); lay.SortOrder = Enum.SortOrder.LayoutOrder; lay.Parent = page
     Pages[name] = page
     return page
 end
 
 local function SwitchPage(name)
     currentPageName = name
-    for n, p in pairs(Pages) do p.Visible = (n == name) end
+    for n, p in pairs(Pages) do
+        if n == name then
+            if not p.Visible then
+                p.Visible = true
+                p.CanvasPosition = Vector2.zero
+            end
+        else
+            p.Visible = false
+        end
+    end
     for n, t in pairs(Tabs) do
         if n == name then
-            TweenService:Create(t, Anim.Fast, {BackgroundColor3 = C.ACTIVE, TextColor3 = Color3.fromRGB(12,12,14)}):Play()
+            TweenService:Create(t, Anim.Fast, {BackgroundColor3 = C.ACTIVE_BG}):Play()
+            if t:FindFirstChild("Lbl") then
+                TweenService:Create(t.Lbl, Anim.Fast, {TextColor3 = C.ACTIVE_FG}):Play()
+            end
         else
-            TweenService:Create(t, Anim.Fast, {BackgroundColor3 = C.PANEL2, TextColor3 = C.MUTED}):Play()
+            TweenService:Create(t, Anim.Fast, {BackgroundColor3 = Color3.fromRGB(0,0,0)}):Play()
+            if t:FindFirstChild("Lbl") then
+                TweenService:Create(t.Lbl, Anim.Fast, {TextColor3 = C.MUTED}):Play()
+            end
         end
     end
 end
 
 local function CreateTab(name)
     local tab = Instance.new("TextButton")
-    tab.Size = UDim2.fromOffset(IS_MOBILE and 86 or 78, 26)
-    tab.BackgroundColor3 = C.PANEL2; tab.BorderSizePixel = 0
-    tab.Text = name; tab.TextColor3 = C.MUTED
-    tab.Font = Enum.Font.GothamBold; tab.TextSize = 8
-    tab.AutoButtonColor = false; tab.Parent = TabScroll
-    Instance.new("UICorner", tab).CornerRadius = UDim.new(0,6)
+    tab.Size = UDim2.fromOffset(IS_MOBILE and 82 or 76, 28)
+    tab.BackgroundColor3 = Color3.fromRGB(0,0,0); tab.BackgroundTransparency = 0
+    tab.BorderSizePixel = 0
+    tab.Text = ""; tab.AutoButtonColor = false; tab.Parent = TabScroll
+    Instance.new("UICorner", tab).CornerRadius = UDim.new(0,7)
+
+    local lbl = Instance.new("TextLabel")
+    lbl.Name = "Lbl"
+    lbl.BackgroundTransparency = 1
+    lbl.Size = UDim2.fromScale(1,1)
+    lbl.Text = name
+    lbl.TextColor3 = C.MUTED
+    lbl.Font = Enum.Font.GothamBold
+    lbl.TextSize = 9
+    lbl.Parent = tab
+
     Tabs[name] = tab
     tab.MouseButton1Click:Connect(function()
         if currentPageName == name then return end
@@ -808,11 +932,13 @@ local function CreateTab(name)
     tab.MouseEnter:Connect(function()
         if currentPageName ~= name then
             TweenService:Create(tab, Anim.Fast, {BackgroundColor3 = C.PANEL3}):Play()
+            TweenService:Create(lbl, Anim.Fast, {TextColor3 = C.TEXT_DIM}):Play()
         end
     end)
     tab.MouseLeave:Connect(function()
         if currentPageName ~= name then
-            TweenService:Create(tab, Anim.Fast, {BackgroundColor3 = C.PANEL2}):Play()
+            TweenService:Create(tab, Anim.Fast, {BackgroundColor3 = Color3.fromRGB(0,0,0)}):Play()
+            TweenService:Create(lbl, Anim.Fast, {TextColor3 = C.MUTED}):Play()
         end
     end)
     return tab
@@ -827,39 +953,66 @@ for _, n in ipairs(PagesList) do CreateTab(n) end
 --==================================================
 local function AddSection(parent, text)
     local holder = Instance.new("Frame")
-    holder.Size = UDim2.new(1,0,0,22); holder.BackgroundTransparency = 1
+    holder.Size = UDim2.new(1,0,0,26); holder.BackgroundTransparency = 1
     holder.Parent = parent
-    local bar = Instance.new("Frame")
-    bar.Size = UDim2.fromOffset(3,12); bar.Position = UDim2.fromOffset(0,5)
-    bar.BackgroundColor3 = C.ACTIVE; bar.BorderSizePixel = 0; bar.Parent = holder
-    Instance.new("UICorner", bar).CornerRadius = UDim.new(1,0)
+
     local l = Instance.new("TextLabel")
-    l.BackgroundTransparency = 1; l.Position = UDim2.fromOffset(10,0)
-    l.Size = UDim2.new(1,-10,1,0)
-    l.Text = text; l.TextColor3 = C.TEXT_DIM; l.Font = Enum.Font.GothamBold
-    l.TextSize = 9; l.TextXAlignment = Enum.TextXAlignment.Left; l.Parent = holder
+    l.BackgroundTransparency = 1
+    l.Position = UDim2.fromOffset(2,0)
+    l.Size = UDim2.new(1,-2,1,0)
+    l.Text = string.upper(text)
+    l.TextColor3 = C.MUTED
+    l.Font = Enum.Font.GothamBold
+    l.TextSize = 9
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Parent = holder
+
+    local line = Instance.new("Frame")
+    line.Position = UDim2.new(0,0,1,-4)
+    line.Size = UDim2.new(1,0,0,1)
+    line.BackgroundColor3 = C.BORDER
+    line.BackgroundTransparency = 0.4
+    line.BorderSizePixel = 0
+    line.Parent = holder
+
+    local accent = Instance.new("Frame")
+    accent.Position = UDim2.new(0,0,1,-4)
+    accent.Size = UDim2.fromOffset(28,1)
+    accent.BackgroundColor3 = C.ACCENT
+    accent.BorderSizePixel = 0
+    accent.Parent = holder
+
+    return holder
 end
 
 local function AddToggle(parent, name, default, callback)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1,0,0,40); btn.BackgroundColor3 = C.PANEL
+    btn.Size = UDim2.new(1,0,0,44); btn.BackgroundColor3 = C.PANEL
     btn.BorderSizePixel = 0; btn.Text = ""; btn.AutoButtonColor = false; btn.Parent = parent
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,8)
-    local st = Instance.new("UIStroke", btn); st.Color = C.BORDER
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,10)
+    local st = Instance.new("UIStroke", btn); st.Color = C.BORDER; st.Transparency = 0.3
+
+    local acc = Instance.new("Frame")
+    acc.Size = UDim2.new(0,2,1,-16); acc.Position = UDim2.fromOffset(0,8)
+    acc.BackgroundColor3 = C.BORDER_LIGHT; acc.BorderSizePixel = 0
+    acc.BackgroundTransparency = 0.6; acc.Parent = btn
+    Instance.new("UICorner", acc).CornerRadius = UDim.new(1,0)
 
     local lab = Instance.new("TextLabel")
-    lab.BackgroundTransparency = 1; lab.Position = UDim2.fromOffset(12,0)
-    lab.Size = UDim2.new(1,-60,1,0); lab.Text = name; lab.TextColor3 = C.TEXT
+    lab.BackgroundTransparency = 1; lab.Position = UDim2.fromOffset(14,0)
+    lab.Size = UDim2.new(1,-66,1,0); lab.Text = name; lab.TextColor3 = C.TEXT
     lab.Font = Enum.Font.GothamMedium; lab.TextSize = 11
     lab.TextXAlignment = Enum.TextXAlignment.Left; lab.Parent = btn
 
-    local sw = Instance.new("Frame"); sw.Size = UDim2.fromOffset(36,20)
-    sw.Position = UDim2.new(1,-46,0.5,-10); sw.BackgroundColor3 = C.SWITCH_OFF
+    local sw = Instance.new("Frame"); sw.Size = UDim2.fromOffset(38,22)
+    sw.Position = UDim2.new(1,-52,0.5,-11); sw.BackgroundColor3 = C.SWITCH_OFF
     sw.BorderSizePixel = 0; sw.Parent = btn
     Instance.new("UICorner", sw).CornerRadius = UDim.new(1,0)
 
-    local kn = Instance.new("Frame"); kn.Size = UDim2.fromOffset(14,14)
-    kn.Position = UDim2.new(0,3,0.5,-7); kn.BackgroundColor3 = C.KNOB_OFF
+    local swStroke = Instance.new("UIStroke", sw); swStroke.Color = C.BORDER; swStroke.Transparency = 0.4
+
+    local kn = Instance.new("Frame"); kn.Size = UDim2.fromOffset(16,16)
+    kn.Position = UDim2.new(0,3,0.5,-8); kn.BackgroundColor3 = C.KNOB_OFF
     kn.BorderSizePixel = 0; kn.Parent = sw
     Instance.new("UICorner", kn).CornerRadius = UDim.new(1,0)
 
@@ -867,22 +1020,24 @@ local function AddToggle(parent, name, default, callback)
     local function upd(animate)
         local ti = animate and Anim.Fast or TweenInfo.new(0)
         if state then
-            TweenService:Create(sw, ti, {BackgroundColor3 = C.ACTIVE}):Play()
-            TweenService:Create(kn, ti, {Position = UDim2.new(1,-17,0.5,-7), BackgroundColor3 = C.KNOB_ON}):Play()
+            TweenService:Create(sw, ti, {BackgroundColor3 = C.ACCENT}):Play()
+            TweenService:Create(kn, ti, {Position = UDim2.new(1,-19,0.5,-8), BackgroundColor3 = C.KNOB_ON}):Play()
+            TweenService:Create(acc, ti, {BackgroundColor3 = C.ACCENT, BackgroundTransparency = 0}):Play()
+            TweenService:Create(st, ti, {Color = C.BORDER_LIGHT, Transparency = 0}):Play()
         else
             TweenService:Create(sw, ti, {BackgroundColor3 = C.SWITCH_OFF}):Play()
-            TweenService:Create(kn, ti, {Position = UDim2.new(0,3,0.5,-7), BackgroundColor3 = C.KNOB_OFF}):Play()
+            TweenService:Create(kn, ti, {Position = UDim2.new(0,3,0.5,-8), BackgroundColor3 = C.KNOB_OFF}):Play()
+            TweenService:Create(acc, ti, {BackgroundColor3 = C.BORDER_LIGHT, BackgroundTransparency = 0.6}):Play()
+            TweenService:Create(st, ti, {Color = C.BORDER, Transparency = 0.3}):Play()
         end
     end
     upd(false)
 
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, Anim.Fast, {BackgroundColor3 = C.PANEL2}):Play()
-        TweenService:Create(st, Anim.Fast, {Color = C.BORDER_LIGHT}):Play()
     end)
     btn.MouseLeave:Connect(function()
         TweenService:Create(btn, Anim.Fast, {BackgroundColor3 = C.PANEL}):Play()
-        TweenService:Create(st, Anim.Fast, {Color = C.BORDER}):Play()
     end)
 
     btn.MouseButton1Click:Connect(function()
@@ -902,39 +1057,69 @@ end
 
 local function AddActionButton(parent, title, subtitle, callback)
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(1,0,0,44); btn.BackgroundColor3 = C.PANEL
-    btn.BorderSizePixel = 0; btn.Text = ""; btn.AutoButtonColor = false; btn.Parent = parent
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,8)
-    local st = Instance.new("UIStroke", btn); st.Color = C.BORDER
+    btn.Size = UDim2.new(1,0,0,50); btn.BackgroundColor3 = C.PANEL
+    btn.BorderSizePixel = 0; btn.Text = ""; btn.AutoButtonColor = false; btn.ClipsDescendants = true; btn.Parent = parent
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,10)
+    local st = Instance.new("UIStroke", btn); st.Color = C.BORDER; st.Transparency = 0.3
+
+    local acc = Instance.new("Frame")
+    acc.Size = UDim2.new(0,2,1,-18); acc.Position = UDim2.fromOffset(0,9)
+    acc.BackgroundColor3 = C.BORDER_LIGHT; acc.BorderSizePixel = 0
+    acc.BackgroundTransparency = 0.4; acc.Parent = btn
+    Instance.new("UICorner", acc).CornerRadius = UDim.new(1,0)
+
+    local arrow = Instance.new("TextLabel")
+    arrow.BackgroundTransparency = 1
+    arrow.Position = UDim2.new(1,-30,0,0)
+    arrow.Size = UDim2.fromOffset(20,50)
+    arrow.Text = "›"
+    arrow.TextColor3 = C.MUTED
+    arrow.Font = Enum.Font.GothamBold
+    arrow.TextSize = 18
+    arrow.Parent = btn
 
     local tl = Instance.new("TextLabel")
-    tl.BackgroundTransparency = 1; tl.Position = UDim2.fromOffset(12,5)
-    tl.Size = UDim2.new(1,-24,0,16); tl.Text = title; tl.TextColor3 = C.TEXT
+    tl.BackgroundTransparency = 1; tl.Position = UDim2.fromOffset(14,7)
+    tl.Size = UDim2.new(1,-50,0,18); tl.Text = title; tl.TextColor3 = C.TEXT
     tl.Font = Enum.Font.GothamBold; tl.TextSize = 11
     tl.TextXAlignment = Enum.TextXAlignment.Left; tl.Parent = btn
 
     local sl = Instance.new("TextLabel")
-    sl.BackgroundTransparency = 1; sl.Position = UDim2.fromOffset(12,22)
-    sl.Size = UDim2.new(1,-24,0,14); sl.Text = subtitle or ""; sl.TextColor3 = C.MUTED
+    sl.BackgroundTransparency = 1; sl.Position = UDim2.fromOffset(14,26)
+    sl.Size = UDim2.new(1,-50,0,16); sl.Text = subtitle or ""; sl.TextColor3 = C.MUTED
     sl.Font = Enum.Font.GothamMedium; sl.TextSize = 8
     sl.TextXAlignment = Enum.TextXAlignment.Left; sl.TextTruncate = Enum.TextTruncate.AtEnd
     sl.Parent = btn
 
+    -- Ripple
+    local ripple = Instance.new("Frame")
+    ripple.AnchorPoint = Vector2.new(0.5,0.5)
+    ripple.Size = UDim2.fromOffset(10,10); ripple.Position = UDim2.fromScale(0.5,0.5)
+    ripple.BackgroundColor3 = C.ACCENT; ripple.BackgroundTransparency = 1
+    ripple.BorderSizePixel = 0; ripple.Parent = btn
+    Instance.new("UICorner", ripple).CornerRadius = UDim.new(1,0)
+
     btn.MouseEnter:Connect(function()
         TweenService:Create(btn, Anim.Fast, {BackgroundColor3 = C.PANEL2}):Play()
-        TweenService:Create(st, Anim.Fast, {Color = C.BORDER_LIGHT}):Play()
+        TweenService:Create(acc, Anim.Fast, {BackgroundColor3 = C.ACCENT, BackgroundTransparency = 0}):Play()
+        TweenService:Create(arrow, Anim.Fast, {TextColor3 = C.ACCENT, Position = UDim2.new(1,-26,0,0)}):Play()
+        TweenService:Create(st, Anim.Fast, {Color = C.BORDER_LIGHT, Transparency = 0}):Play()
     end)
     btn.MouseLeave:Connect(function()
         TweenService:Create(btn, Anim.Fast, {BackgroundColor3 = C.PANEL}):Play()
-        TweenService:Create(st, Anim.Fast, {Color = C.BORDER}):Play()
+        TweenService:Create(acc, Anim.Fast, {BackgroundColor3 = C.BORDER_LIGHT, BackgroundTransparency = 0.4}):Play()
+        TweenService:Create(arrow, Anim.Fast, {TextColor3 = C.MUTED, Position = UDim2.new(1,-30,0,0)}):Play()
+        TweenService:Create(st, Anim.Fast, {Color = C.BORDER, Transparency = 0.3}):Play()
     end)
 
     btn.MouseButton1Click:Connect(function()
-        local origSize = UDim2.new(1,0,0,44)
-        TweenService:Create(btn, TweenInfo.new(0.06, Enum.EasingStyle.Quad), {Size = UDim2.new(1,-6,0,42)}):Play()
-        task.delay(0.08, function()
-            TweenService:Create(btn, Anim.Bounce, {Size = origSize}):Play()
-        end)
+        ripple.Size = UDim2.fromOffset(10,10)
+        ripple.BackgroundTransparency = 0.7
+        ripple.Position = UDim2.fromScale(0.5,0.5)
+        TweenService:Create(ripple, TweenInfo.new(0.45, Enum.EasingStyle.Quad), {
+            Size = UDim2.fromOffset(300,300),
+            BackgroundTransparency = 1,
+        }):Play()
         if callback then task.spawn(function() pcall(callback) end) end
     end)
 
@@ -946,31 +1131,35 @@ end
 
 local function AddNumberBox(parent, labelText, defaultValue, minValue, maxValue, callback)
     local holder = Instance.new("Frame")
-    holder.Size = UDim2.new(1,0,0,40); holder.BackgroundColor3 = C.PANEL
+    holder.Size = UDim2.new(1,0,0,44); holder.BackgroundColor3 = C.PANEL
     holder.BorderSizePixel = 0; holder.Parent = parent
-    Instance.new("UICorner", holder).CornerRadius = UDim.new(0,8)
-    local st = Instance.new("UIStroke", holder); st.Color = C.BORDER
+    Instance.new("UICorner", holder).CornerRadius = UDim.new(0,10)
+    local st = Instance.new("UIStroke", holder); st.Color = C.BORDER; st.Transparency = 0.3
+
     local lab = Instance.new("TextLabel")
-    lab.BackgroundTransparency = 1; lab.Position = UDim2.fromOffset(12,0)
-    lab.Size = UDim2.new(1,-90,1,0); lab.Text = labelText; lab.TextColor3 = C.TEXT
+    lab.BackgroundTransparency = 1; lab.Position = UDim2.fromOffset(14,0)
+    lab.Size = UDim2.new(1,-100,1,0); lab.Text = labelText; lab.TextColor3 = C.TEXT
     lab.Font = Enum.Font.GothamMedium; lab.TextSize = 11
     lab.TextXAlignment = Enum.TextXAlignment.Left; lab.Parent = holder
+
     local box = Instance.new("TextBox")
-    box.Size = UDim2.fromOffset(66,26); box.Position = UDim2.new(1,-76,0.5,-13)
-    box.BackgroundColor3 = C.PANEL2; box.BorderSizePixel = 0
+    box.Size = UDim2.fromOffset(72,28); box.Position = UDim2.new(1,-82,0.5,-14)
+    box.BackgroundColor3 = C.PANEL3; box.BorderSizePixel = 0
     box.Text = tostring(defaultValue); box.TextColor3 = C.TEXT
-    box.Font = Enum.Font.GothamBold; box.TextSize = 10
+    box.Font = Enum.Font.GothamBold; box.TextSize = 11
     box.ClearTextOnFocus = false; box.Parent = holder
-    Instance.new("UICorner", box).CornerRadius = UDim.new(0,6)
-    local bStroke = Instance.new("UIStroke", box); bStroke.Color = C.BORDER
+    Instance.new("UICorner", box).CornerRadius = UDim.new(0,7)
+    local bStroke = Instance.new("UIStroke", box); bStroke.Color = C.BORDER; bStroke.Transparency = 0.4
 
     box.Focused:Connect(function()
-        TweenService:Create(box, Anim.Fast, {BackgroundColor3 = C.PANEL3}):Play()
-        TweenService:Create(bStroke, Anim.Fast, {Color = C.BORDER_LIGHT}):Play()
+        TweenService:Create(box, Anim.Fast, {BackgroundColor3 = C.PANEL4}):Play()
+        TweenService:Create(bStroke, Anim.Fast, {Color = C.BORDER_LIGHT, Transparency = 0}):Play()
+        TweenService:Create(st, Anim.Fast, {Color = C.BORDER_LIGHT, Transparency = 0}):Play()
     end)
     box.FocusLost:Connect(function()
-        TweenService:Create(box, Anim.Fast, {BackgroundColor3 = C.PANEL2}):Play()
-        TweenService:Create(bStroke, Anim.Fast, {Color = C.BORDER}):Play()
+        TweenService:Create(box, Anim.Fast, {BackgroundColor3 = C.PANEL3}):Play()
+        TweenService:Create(bStroke, Anim.Fast, {Color = C.BORDER, Transparency = 0.4}):Play()
+        TweenService:Create(st, Anim.Fast, {Color = C.BORDER, Transparency = 0.3}):Play()
         local v = tonumber(box.Text)
         if v then
             v = math.clamp(math.floor(v), minValue, maxValue)
@@ -983,9 +1172,9 @@ local function AddNumberBox(parent, labelText, defaultValue, minValue, maxValue,
 end
 
 --==================================================
--- ESP PAGE (Glass Bridge ESP removed)
+-- ESP PAGE
 --==================================================
-AddSection(Pages.ESP, "ESP FEATURES")
+AddSection(Pages.ESP, "ESP Features")
 AddToggle(Pages.ESP, "Player ESP", false, function(v) Config.PlayerESP = v; refreshPlayers() end)
 AddToggle(Pages.ESP, "Powers ESP", false, function(v)
     PowersESP.Enabled = v
@@ -997,26 +1186,26 @@ AddToggle(Pages.ESP, "Hide & Seek ESP (Names)", false, function(v) Config.HideSe
 --==================================================
 -- TOOLS
 --==================================================
-AddSection(Pages.TOOLS, "ADMIN")
+AddSection(Pages.TOOLS, "Admin")
 AddActionButton(Pages.TOOLS, "Infinite Yield Admin", "Load IY Commands", function()
     pcall(function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
     end)
 end)
-AddSection(Pages.TOOLS, "PROTECTION")
+AddSection(Pages.TOOLS, "Protection")
 AddToggle(Pages.TOOLS, "Anti-Fall Platform", false, function(v) Config.AntiFall = v end)
-AddSection(Pages.TOOLS, "MOVEMENT")
+AddSection(Pages.TOOLS, "Movement")
 AddToggle(Pages.TOOLS, "Speed Boost", false, function(v) Config.SpeedBoost = v; resetMovement() end)
 AddNumberBox(Pages.TOOLS, "Speed Value", Config.Speed, 16, 500, function(v) Config.Speed = v end)
 AddToggle(Pages.TOOLS, "Jump Boost", false, function(v) Config.JumpBoost = v; resetMovement() end)
 AddNumberBox(Pages.TOOLS, "Jump Value", Config.Jump, 50, 300, function(v) Config.Jump = v end)
-AddSection(Pages.TOOLS, "INTERACTION")
+AddSection(Pages.TOOLS, "Interaction")
 AddToggle(Pages.TOOLS, "Instant Interact", false, function(v) applyInstantInteract(v) end)
 
 --==================================================
 -- TELEPORT
 --==================================================
-AddSection(Pages.TELEPORT, "TELEPORT")
+AddSection(Pages.TELEPORT, "Teleport")
 AddActionButton(Pages.TELEPORT, "TP TO BASE", "Teleport to spawn", tpToBase)
 AddActionButton(Pages.TELEPORT, "TP TO ROOF", "Teleport to highest", tpToRoof)
 AddActionButton(Pages.TELEPORT, "TP DOWN 40", "Teleport 40 studs down", function() tpRelative(0,-40,0) end)
@@ -1025,7 +1214,7 @@ AddActionButton(Pages.TELEPORT, "TP UP 100", "Teleport 100 studs up", function()
 --==================================================
 -- RLGL
 --==================================================
-AddSection(Pages.RLGL, "RED LIGHT GREEN LIGHT")
+AddSection(Pages.RLGL, "Red Light Green Light")
 AddActionButton(Pages.RLGL, "TP To End", "RedLightGreenLight end", function()
     if tick() - tbl3.lastTPTime < 10 then
         fn5("Cooldown", "Wait " .. math.ceil(10 - (tick() - tbl3.lastTPTime)) .. "s")
@@ -1178,7 +1367,7 @@ end)
 --==================================================
 -- HIDE AND SEEK
 --==================================================
-AddSection(Pages.HIDESEEK, "HIDE AND SEEK")
+AddSection(Pages.HIDESEEK, "Hide And Seek")
 AddActionButton(Pages.HIDESEEK, "Auto Escape", "TP to safe zone", function()
     if not fn4("HideAndSeek") then fn5(nil, "HideAndSeek not active"); return end
     local c = LP.Character
@@ -1662,7 +1851,7 @@ local function tugLoop()
         end)
     else tbl2.tugThread = nil end
 end
-AddSection(Pages.TUG, "TUG OF WAR")
+AddSection(Pages.TUG, "Tug Of War")
 AddToggle(Pages.TUG, "Auto Pull", false, function(v) tbl.tugOfWarAutoPullEnabled = v; tugLoop() end)
 AddToggle(Pages.TUG, "Pull Helper", false, function(v) tbl.tugOfWarPullHelperEnabled = v; tugLoop() end)
 
@@ -1681,7 +1870,7 @@ local function mingleNoclip(on)
         local dho = door:FindFirstChild("DoorHandleOtherSide"); if dho then dho.CanCollide = not on end
     end
 end
-AddSection(Pages.MINGLE, "MINGLE")
+AddSection(Pages.MINGLE, "Mingle")
 AddToggle(Pages.MINGLE, "Noclip Doors", false, function(v)
     if mingleConn then mingleConn:Disconnect(); mingleConn = nil end
     if mingleConn2 then mingleConn2:Disconnect(); mingleConn2 = nil end
@@ -1876,7 +2065,7 @@ local function findGuardTarget()
     end
     return best, bestHRP
 end
-AddSection(Pages.REBEL, "REBEL")
+AddSection(Pages.REBEL, "Rebel")
 AddToggle(Pages.REBEL, "Auto Shoot", false, function(v)
     tbl.autoShootEnabled = v
     if v and not tbl2.rebelShoot then
@@ -2026,7 +2215,7 @@ end)
 --==================================================
 -- SKY / SQUID GAME
 --==================================================
-AddSection(Pages.SKY, "SKY / SQUID GAME")
+AddSection(Pages.SKY, "Sky / Squid Game")
 tbl.skyAntiFallEnabled = false
 AddToggle(Pages.SKY, "Sky Squid Game Anti Fall", false, function(v)
     tbl.skyAntiFallEnabled = v
@@ -2133,7 +2322,7 @@ end)
 --==================================================
 -- GLASS / JUMP ROPE
 --==================================================
-AddSection(Pages.GLASS, "GLASS BRIDGE")
+AddSection(Pages.GLASS, "Glass Bridge")
 local glassESP = false
 local fakeSafe = false
 local glassHL, glassFake = {}, {}
@@ -2233,7 +2422,7 @@ AddActionButton(Pages.GLASS, "TP To End", "Glass bridge end", function()
     else fn5(nil, "Glass Bridge not running") end
 end)
 
-AddSection(Pages.GLASS, "JUMP ROPE")
+AddSection(Pages.GLASS, "Jump Rope")
 AddActionButton(Pages.GLASS, "Rope TP To Start", "Jump rope start", function()
     if tick() - tbl3.lastRopeTPTime < 10 then fn5("Cooldown", "Wait"); return end
     if fn4("JumpRope") then fn9(CFrame.new(616,197,921)); tbl3.lastRopeTPTime = tick()
@@ -2277,7 +2466,7 @@ end)
 --==================================================
 -- DALGONA
 --==================================================
-AddSection(Pages.DALGONA, "DALGONA")
+AddSection(Pages.DALGONA, "Dalgona")
 AddActionButton(Pages.DALGONA, "Auto Complete Dalgona", "Full auto dalgona", function()
     if not fn4("Dalgona") then fn5(nil, "Dalgona not running"); return end
     task.spawn(function()
@@ -2460,7 +2649,7 @@ end)
 --==================================================
 -- PENTATHLON
 --==================================================
-AddSection(Pages.PENTATHLON, "PENTATHLON")
+AddSection(Pages.PENTATHLON, "Pentathlon")
 AddActionButton(Pages.PENTATHLON, "Auto Complete Ddakji", "Throw ddakji", function()
     if not guid then fn5(nil, "Pentathlon not running"); return end
     local cam = Workspace.CurrentCamera
@@ -2524,7 +2713,7 @@ end)
 --==================================================
 -- GUARD
 --==================================================
-AddSection(Pages.GUARD, "GUARD MODE")
+AddSection(Pages.GUARD, "Guard Mode")
 AddActionButton(Pages.GUARD, "Free Perm Guard", "Set perm guard attribute", function()
     LP:SetAttribute("__OwnsPermGuard", true)
     fn5("Guard", "Free Perm Guard Activated")
@@ -2628,7 +2817,6 @@ AddToggle(Pages.GUARD, "Infinite Ammo", false, function(v)
     end
 end)
 
--- Won Farm (optimized)
 local WonFarm = { Enabled = false, Thread = nil, Console = nil, Module = nil, LastScan = 0 }
 
 local function GetArcadeConsole()
@@ -2716,13 +2904,13 @@ local function ToggleWonFarm(state)
     end
 end
 
-AddSection(Pages.GUARD, "FARM")
+AddSection(Pages.GUARD, "Farm")
 AddToggle(Pages.GUARD, "Won Farm (Arcade)", false, function(v) ToggleWonFarm(v) end)
 
 --==================================================
 -- COMBAT
 --==================================================
-AddSection(Pages.COMBAT, "COMBAT")
+AddSection(Pages.COMBAT, "Combat")
 local fly = { Enabled = false, Speed = 32, Conn = nil, BV = nil }
 local flyKey = Enum.KeyCode.U
 local function startFly(toggle)
@@ -2820,10 +3008,10 @@ end)
 --==================================================
 -- UTILITIES
 --==================================================
-AddSection(Pages.UTILITIES, "AUTO SYSTEMS")
+AddSection(Pages.UTILITIES, "Auto Systems")
 AddToggle(Pages.UTILITIES, "Auto QTE (Universal)", false, function(v) toggleAutoQTE(v) end)
 
-AddSection(Pages.UTILITIES, "UTILITIES")
+AddSection(Pages.UTILITIES, "Utilities")
 
 local ijConn
 AddToggle(Pages.UTILITIES, "Infinite Jump", false, function(v)
@@ -3047,7 +3235,7 @@ end)
 --==================================================
 -- VISUAL
 --==================================================
-AddSection(Pages.VISUAL, "GAMEPASS / CLIENT")
+AddSection(Pages.VISUAL, "Gamepass / Client")
 local function unlockAttr(name, attr)
     local conn
     AddToggle(Pages.VISUAL, name, false, function(v)
@@ -3070,7 +3258,7 @@ unlockAttr("Unlock Glass Vision", "__OwnsGlassManufacturerVision")
 unlockAttr("Unlock PS Plus", "__OwnsPSPlus")
 unlockAttr("Unlock Emote Pages", "__OwnsEmotePages")
 
-AddSection(Pages.VISUAL, "UNIFORM")
+AddSection(Pages.VISUAL, "Uniform")
 
 local Uniform = { Enabled = false, Color = Color3.fromRGB(255, 255, 255), Conn = nil }
 local function ApplyUniform()
@@ -3114,7 +3302,7 @@ AddNumberBox(Pages.VISUAL, "Uniform B", 255, 0, 255, function(v)
     Uniform.Color = Color3.fromRGB(math.floor(Uniform.Color.R*255+0.5), math.floor(Uniform.Color.G*255+0.5), v); ApplyUniform()
 end)
 
-AddSection(Pages.VISUAL, "CUSTOM STATS")
+AddSection(Pages.VISUAL, "Custom Stats")
 _G.CustomWinsEnabled = false
 _G.CustomWinsValue = 100
 AddNumberBox(Pages.VISUAL, "Custom Wins Value", 100, 0, 999999, function(v) _G.CustomWinsValue = v end)
@@ -3148,7 +3336,6 @@ AddToggle(Pages.VISUAL, "Enable Custom Win Streak", false, function(v)
     end
 end)
 
--- Emotes
 local emotes = {
     {Name="Dream Journal", AnimId="rbxassetid://117325441970867", SoundId="rbxassetid://88476306353688", Volume=10},
     {Name="Otsukare Summer", AnimId="rbxassetid://134888005420629", SoundId="rbxassetid://127332409398776", Volume=3},
@@ -3214,10 +3401,11 @@ end)
 local function clampPosition(newPos)
     local vp = CAM.ViewportSize
     local w = Main.AbsoluteSize.X
+    local h = Main.AbsoluteSize.Y
     local x = newPos.X.Offset
     local y = newPos.Y.Offset
-    x = math.clamp(x, -w + 60, vp.X - 60)
-    y = math.clamp(y, 0, vp.Y - 44)
+    x = math.clamp(x, -w + 100, vp.X - 100)
+    y = math.clamp(y, 0, math.max(0, vp.Y - 42))
     return UDim2.new(0, x, 0, y)
 end
 
@@ -3244,26 +3432,34 @@ end)
 -- RESIZE HANDLE
 --==================================================
 local ResizeHandle = Instance.new("TextButton")
-ResizeHandle.Size = UDim2.fromOffset(IS_MOBILE and 26 or 20, IS_MOBILE and 26 or 20)
-ResizeHandle.Position = UDim2.new(1, -28, 1, -28)
+ResizeHandle.Size = UDim2.fromOffset(IS_MOBILE and 28 or 22, IS_MOBILE and 28 or 22)
+ResizeHandle.Position = UDim2.new(1, -30, 1, -30)
 ResizeHandle.BackgroundColor3 = C.PANEL2
+ResizeHandle.BackgroundTransparency = 0.3
 ResizeHandle.BorderSizePixel = 0
 ResizeHandle.Text = ""
 ResizeHandle.AutoButtonColor = false
 ResizeHandle.Active = true
 ResizeHandle.Parent = Main
-Instance.new("UICorner", ResizeHandle).CornerRadius = UDim.new(0, 6)
-local rhS = Instance.new("UIStroke", ResizeHandle); rhS.Color = C.BORDER
+Instance.new("UICorner", ResizeHandle).CornerRadius = UDim.new(0, 8)
+local rhS = Instance.new("UIStroke", ResizeHandle); rhS.Color = C.BORDER; rhS.Transparency = 0.3
 
 for i = 1, 3 do
     local l = Instance.new("Frame")
-    l.Size = UDim2.fromOffset(1, 8)
-    l.Position = UDim2.new(1, -6 - (i-1)*5, 1, -10)
+    l.Size = UDim2.fromOffset(1, 7)
+    l.Position = UDim2.new(1, -7 - (i-1)*5, 1, -11)
     l.Rotation = -45
     l.BackgroundColor3 = C.MUTED
     l.BorderSizePixel = 0
     l.Parent = ResizeHandle
 end
+
+ResizeHandle.MouseEnter:Connect(function()
+    TweenService:Create(ResizeHandle, Anim.Fast, {BackgroundColor3 = C.PANEL3, BackgroundTransparency = 0}):Play()
+end)
+ResizeHandle.MouseLeave:Connect(function()
+    TweenService:Create(ResizeHandle, Anim.Fast, {BackgroundColor3 = C.PANEL2, BackgroundTransparency = 0.3}):Play()
+end)
 
 local resizing, resizeStart, resizeStartSize
 ResizeHandle.InputBegan:Connect(function(input)
@@ -3283,7 +3479,7 @@ UIS.InputChanged:Connect(function(input)
         local d = input.Position - resizeStart
         local vp = CAM.ViewportSize
         local nw = math.clamp(resizeStartSize.X.Offset + d.X, 320, vp.X - 20)
-        local nh = math.clamp(resizeStartSize.Y.Offset + d.Y, 240, vp.Y - 20)
+        local nh = math.clamp(resizeStartSize.Y.Offset + d.Y, 260, vp.Y - 20)
         Main.Size = UDim2.fromOffset(nw, nh)
     end
 end)
@@ -3292,13 +3488,14 @@ end)
 -- MINIMIZE
 --==================================================
 local Mini = Instance.new("TextButton")
-Mini.Size = UDim2.fromOffset(48,48); Mini.Position = UDim2.fromOffset(16,120)
+Mini.Size = UDim2.fromOffset(52,52); Mini.Position = UDim2.fromOffset(16,120)
 Mini.BackgroundColor3 = C.BG; Mini.BorderSizePixel = 0
 Mini.Text = "LX"; Mini.TextColor3 = C.TEXT; Mini.Font = Enum.Font.GothamBold
 Mini.TextSize = 12; Mini.Visible = false; Mini.Active = true
 Mini.AutoButtonColor = false; Mini.Parent = GUI
-Instance.new("UICorner", Mini).CornerRadius = UDim.new(0,12)
+Instance.new("UICorner", Mini).CornerRadius = UDim.new(0,14)
 local mS2 = Instance.new("UIStroke", Mini); mS2.Color = C.BORDER; mS2.Thickness = 1
+local miniScale = Instance.new("UIScale", Mini)
 
 local miniDrag, miniStart, miniPos, miniMoved
 Mini.InputBegan:Connect(function(input)
@@ -3314,23 +3511,25 @@ UIS.InputChanged:Connect(function(input)
         local d = input.Position - miniStart
         if math.abs(d.X) > 5 or math.abs(d.Y) > 5 then miniMoved = true end
         local vp = CAM.ViewportSize
-        local x = math.clamp(miniPos.X.Offset + d.X, 0, vp.X - 48)
-        local y = math.clamp(miniPos.Y.Offset + d.Y, 0, vp.Y - 48)
+        local x = math.clamp(miniPos.X.Offset + d.X, 0, vp.X - 52)
+        local y = math.clamp(miniPos.Y.Offset + d.Y, 0, vp.Y - 52)
         Mini.Position = UDim2.fromOffset(x, y)
     end
 end)
 
 local function closeMenu()
-    TweenService:Create(mainScale, Anim.Normal, {Scale = 0.92}):Play()
-    task.wait(0.15)
+    TweenService:Create(mainScale, Anim.Normal, {Scale = 0.94}):Play()
+    task.wait(0.18)
     Main.Visible = false
     Mini.Visible = true
+    miniScale.Scale = 0.9
+    TweenService:Create(miniScale, Anim.Bounce, {Scale = 1}):Play()
     mainScale.Scale = 1
 end
 local function openMenu()
     Main.Visible = true
     Mini.Visible = false
-    mainScale.Scale = 0.92
+    mainScale.Scale = 0.94
     TweenService:Create(mainScale, Anim.Smooth, {Scale = 1}):Play()
 end
 
